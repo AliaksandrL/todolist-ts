@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {FilterValuesType} from "./App";
 import AddItemForm from "./AddItemForm";
+import EditableSpan from "./EditableSpan";
 
 type TodoListPropsType = {
     id: string
@@ -12,6 +13,8 @@ type TodoListPropsType = {
     changeTaskStatus: (taskID: string, isDone: boolean, todoListId: string) => void
     addTask: (title: string, todoListId: string) => void
     removeTodoList: (todoListId: string) => void
+    changeTaskTitle: (taskID: string, title: string, todoListId: string) => void
+    changeTodoListTitle: (title: string, todoListId: string) => void
 }
 
 export type TaskType = {
@@ -28,6 +31,7 @@ function TodoList(props: TodoListPropsType) {
         const removeTask = () => props.removeTask(t.id, props.id)
         const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) =>
             props.changeTaskStatus(t.id, e.currentTarget.checked, props.id)
+        const changeTaskTitle = (title: string) => props.changeTaskTitle(t.id, title, props.id)
         return (
             <li key={t.id} className={t.isDone ? "is-done" : ""}>
                 <input
@@ -35,7 +39,7 @@ function TodoList(props: TodoListPropsType) {
                     checked={t.isDone}
                     onChange={changeTaskStatus}
                 />
-                <span>{t.title}</span>
+                <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
                 <button onClick={removeTask}>X</button>
             </li>
         )
@@ -65,6 +69,7 @@ function TodoList(props: TodoListPropsType) {
     const setCompletedFilterValue = () => props.changeFilter("completed", props.id)
     const removeTodoList = () => props.removeTodoList(props.id)
     const addTask = (title: string) => props.addTask(title, props.id)
+    const changeTodoListTitle = (title: string) => props.changeTodoListTitle(title, props.id)
 
 
     const allBtnClass = props.filter === "all" ? "active-filter" : ""
@@ -75,7 +80,10 @@ function TodoList(props: TodoListPropsType) {
     // JSX
     return (
         <div>
-            <h3>{props.title}<button onClick={removeTodoList}>x</button></h3>
+            <h3>
+                <EditableSpan title={props.title} changeTitle={changeTodoListTitle}/>
+                <button onClick={removeTodoList}>x</button>
+            </h3>
             <AddItemForm addItem={addTask}/>
             {/*<div>*/}
             {/*    <input*/}
