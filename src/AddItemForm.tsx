@@ -6,7 +6,7 @@ type AddItemFormFormPropsType = {
     addItem: (title: string) => void
 }
 
-function AddItemForm(props: AddItemFormFormPropsType) {
+const AddItemForm = React.memo((props: AddItemFormFormPropsType) => {
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
 
@@ -53,6 +53,6 @@ function AddItemForm(props: AddItemFormFormPropsType) {
             {userMsg}
         </div>
     )
-}
+})
 
 export default AddItemForm;
