@@ -27,10 +27,16 @@ type ActionsType =
     RemoveTodolistActionType
     | AddTodolistActionType
     | ChangeTodolistTitleActionType
-    | ChangeTodolistFilterActionType;
+    | ChangeTodolistFilterActionType
+    | SetTodosActionType
 
 export const todoListsReducer = (state: Array<TodoListType> = initialState, action: ActionsType): Array<TodoListType> => {
     switch (action.type) {
+        case 'SET-TODOS':
+            return action.todos.map((tl)=> {
+               return {...tl, filter: 'all'}
+            })
+
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id != action.id)
         case 'ADD-TODOLIST':
@@ -63,9 +69,21 @@ export const RemoveTodolistAC = (todolistId: string): RemoveTodolistActionType =
 export const AddTodolistAC = (title: string): AddTodolistActionType => {
     return {type: 'ADD-TODOLIST', title, todolistId: v1()}
 }
-export const ChangeTodolistTitleAC = ( title: string, todolistId: string): ChangeTodolistTitleActionType => {
+export const ChangeTodolistTitleAC = (title: string, todolistId: string): ChangeTodolistTitleActionType => {
     return {type: 'CHANGE-TODOLIST-TITLE', title: title, id: todolistId}
 }
 export const ChangeTodolistFilterAC = (todolistId: string, filter: FilterValuesType): ChangeTodolistFilterActionType => {
     return {type: 'CHANGE-TODOLIST-FILTER', filter: filter, id: todolistId}
 }
+
+export const setTodos = (todos: Array<TodoListType>) => {
+    return {
+        type: 'SET-TODOS',
+        todos
+    } as const
+}
+
+// export type SetTodosActionType = {
+//     type: 'SET-TODOS'
+// }
+export type SetTodosActionType = ReturnType<typeof setTodos>
