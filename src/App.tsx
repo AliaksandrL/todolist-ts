@@ -8,7 +8,7 @@ import {Menu} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./store/store";
 import {getTodolistThunk} from "./store/todolists-reducer";
-import { TaskType } from './api/todolist-api';
+import { TaskType } from './api/todolists-api';
 
 
 export type FilterValuesType = "all" | "active" | "completed"

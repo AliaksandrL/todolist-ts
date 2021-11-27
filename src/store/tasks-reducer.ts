@@ -2,7 +2,7 @@ import {TaskStateType, TodoListType} from "../App";
 import {v1} from "uuid";
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
 import {Dispatch} from "redux";
-import {api, TaskPriorities, TaskStatuses, TaskType} from "../api/todolist-api";
+import {api, TaskPriorities, TaskStatuses, TaskType} from "../api/todolists-api";
 
 
 export type RemoveTaskActionType = {
@@ -95,6 +95,9 @@ export const getTaskThunk = (todolistId: string) => {
 
             })
     }
+}
+export const removeTaskTC = () => (dispatch: Dispatch) => {
+    api.
 }
 
 export type UpdateDomainTaskModelType = {
