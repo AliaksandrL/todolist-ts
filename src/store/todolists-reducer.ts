@@ -1,5 +1,8 @@
 import {FilterValuesType, TodoListType} from '../App';
 import {v1} from 'uuid';
+import {Dispatch} from "redux";
+import {AppRootStateType} from "./store";
+import {api, TodolistType} from "../api/todolist-api";
 
 export type RemoveTodolistActionType = {
     type: 'REMOVE-TODOLIST'
@@ -23,20 +26,11 @@ export type ChangeTodolistFilterActionType = {
 }
 let initialState: Array<TodoListType> = []
 
-type ActionsType =
-    RemoveTodolistActionType
-    | AddTodolistActionType
-    | ChangeTodolistTitleActionType
-    | ChangeTodolistFilterActionType
-    | SetTodosActionType
 
 export const todoListsReducer = (state: Array<TodoListType> = initialState, action: ActionsType): Array<TodoListType> => {
     switch (action.type) {
-        case 'SET-TODOS':
-            return action.todos.map((tl)=> {
-               return {...tl, filter: 'all'}
-            })
-
+        case 'SET-TODOLISTS':
+            return action.todolists.map(tl => ({...tl, filter: 'all', entityStatus: 'idle'}))
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id != action.id)
         case 'ADD-TODOLIST':
@@ -76,14 +70,22 @@ export const ChangeTodolistFilterAC = (todolistId: string, filter: FilterValuesT
     return {type: 'CHANGE-TODOLIST-FILTER', filter: filter, id: todolistId}
 }
 
-export const setTodos = (todos: Array<TodoListType>) => {
-    return {
-        type: 'SET-TODOS',
-        todos
-    } as const
+export const setTodolistsAC = (todolists: Array<TodolistType>) => ({type: 'SET-TODOLISTS', todolists} as const)
+
+type ActionsType =
+    RemoveTodolistActionType
+    | AddTodolistActionType
+    | ChangeTodolistTitleActionType
+    | ChangeTodolistFilterActionType
+    | SetTodolistsActionType
+
+export const getTodolistThunk = (dispatch: Dispatch, getState: () => AppRootStateType): void => {
+    api.getTodolists()
+        .then((res) => {
+            let todos = res.data
+            dispatch(setTodolistsAC(todos))
+        })
 }
 
-// export type SetTodosActionType = {
-//     type: 'SET-TODOS'
-// }
-export type SetTodosActionType = ReturnType<typeof setTodos>
+
+export type SetTodolistsActionType = ReturnType<typeof setTodolistsAC>;

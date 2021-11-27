@@ -1,10 +1,12 @@
-import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, useCallback, useEffect, useState} from "react";
 import {FilterValuesType} from "./App";
 import AddItemForm from "./AddItemForm";
 import EditableSpan from "./EditableSpan";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 import {Task} from "./Task";
+import {getTaskThunk} from "./store/tasks-reducer";
+import {useDispatch} from "react-redux";
 
 type TodoListPropsType = {
     id: string
@@ -27,7 +29,13 @@ export type TaskType = {
 }
 
 const TodoList = React.memo((props: TodoListPropsType) => {
-    console.log('TodoList')
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getTaskThunk(props.id))
+    }, [])
+
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
 

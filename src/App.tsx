@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import TodoList, {TaskType} from "./TodoList";
+import TodoList from "./TodoList";
 import {v1} from "uuid";
 import AddItemForm from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
-import {api} from "./api/todolist-api";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./store/store";
-import {setTodos} from "./store/todolists-reducer";
+import {getTodolistThunk} from "./store/todolists-reducer";
+import { TaskType } from './api/todolist-api';
+
 
 export type FilterValuesType = "all" | "active" | "completed"
 export type TodoListType = {
@@ -27,10 +28,7 @@ function App() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        api.getTodolists()
-            .then((res) => {
-                dispatch(setTodos(res.data))
-            })
+        dispatch(getTodolistThunk)
     }, [])
 
     const todoListId_1 = v1()
@@ -42,14 +40,10 @@ function App() {
     // console.log(typeof v1())
     const [tasks, setTasks] = useState<TaskStateType>({
         [todoListId_1]: [
-            {id: v1(), title: "HTML&CSS", isDone: true},
-            {id: v1(), title: "JS", isDone: true},
-            {id: v1(), title: "React", isDone: false},
+
         ],
         [todoListId_2]: [
-            {id: v1(), title: "Beer", isDone: true},
-            {id: v1(), title: "Fish", isDone: true},
-            {id: v1(), title: "meat", isDone: false},
+
         ],
     })
 
@@ -59,13 +53,7 @@ function App() {
         setTasks({...tasks})
     }
     const addTask = (title: string, todoListId: string) => {
-        const newTask: TaskType = {
-            id: v1(),
-            title: title,
-            isDone: false
-        }
-        tasks[todoListId] = [newTask, ...tasks[todoListId]]
-        setTasks({...tasks})
+
     }
     const changeTaskStatus = (taskID: string, isDone: boolean, todoListId: string) => {
         tasks[todoListId] = tasks[todoListId].map(t => t.id === taskID ? {...t, isDone: isDone} : t)
@@ -98,10 +86,10 @@ function App() {
     const todoListsComponents = todoLists.map(tl => {
         let tasksForTodoList = tasks[tl.id]
         if (tl.filter === "active") {
-            tasksForTodoList = tasks[tl.id].filter(t => !t.isDone)
+            tasksForTodoList = tasks[tl.id].filter(t => !t)
         }
         if (tl.filter === "completed") {
-            tasksForTodoList = tasks[tl.id].filter(t => t.isDone)
+            tasksForTodoList = tasks[tl.id].filter(t => t)
         }
         return (
             <Grid item key={tl.id}>
