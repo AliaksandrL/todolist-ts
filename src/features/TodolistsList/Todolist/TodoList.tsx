@@ -1,11 +1,11 @@
 import React, {ChangeEvent, KeyboardEvent, useCallback, useEffect, useState} from "react";
-import {FilterValuesType} from "./App";
-import AddItemForm from "./AddItemForm";
-import EditableSpan from "./EditableSpan";
+import {FilterValuesType} from "../../../app/App";
+import AddItemForm from "../../../AddItemForm";
+import EditableSpan from "../../../EditableSpan";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
-import {Task} from "./Task";
-import {getTaskThunk} from "./store/tasks-reducer";
+import {Task} from "./Task/Task";
+import {getTaskThunk} from "../tasks-reducer";
 import {useDispatch} from "react-redux";
 
 type TodoListPropsType = {
