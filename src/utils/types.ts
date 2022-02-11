@@ -1,5 +1,6 @@
 import {rootReducer, store} from '../app/store'
-import {FieldErrorType} from '../api/todolists-api'
+import {FieldErrorType} from "../api/types";
+
 
 
 // redux common types
